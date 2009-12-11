@@ -24,5 +24,26 @@ namespace :db do
 
 end
 
-task :default => ["db:clear_and_prepare"]
+namespace :benchmark do
+  desc "Lista produktow konta"
+  task :account_products do
+    RBench.run(1) do
+      format :width => 80
+      column :times
+      column :one, :title => "Bez rodziców"
+      column :two, :title => "Z rodzicami"
+      column :diff, :title => "#2/#1", :compare => [:two, :one]
+      [1, 10, 100, 1_000].each do |times|
+        report "Lista produktow konta", times do
+          one { Product.find_by_account_id(rand(SETTINGS["number_of_accounts"]))}
+          two { Product.find_by_account_id_with_parents(rand(SETTINGS["number_of_accounts"]))}
+        end
+      end
+    end
+  end
 
+  desc "Wszystkie benchamrki"
+  task :all => [:account_products]
+end
+
+task :default => ["benchmark:all"]

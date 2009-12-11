@@ -1,3 +1,14 @@
-number_of_accounts: 1000
-products_per_account: 30
-inheritance_ratio: 0.25
+small:
+  number_of_accounts: 100
+  products_per_account: 3
+  inheritance_ratio: 0.25
+medium:
+  number_of_accounts: 1000
+  products_per_account: 30
+  inheritance_ratio: 0.25
+large:
+  number_of_accounts: 10000
+  products_per_account: 300
+  inheritance_ratio: 0.25
+  
+  
