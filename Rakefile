@@ -1,35 +1,28 @@
 require(File.join(File.dirname(__FILE__), 'lib', 'initialize'))
 
-namespace :mongodb do
-  desc "Mongodb - inserts"
-  task :inserts do
-    RBench.run(1) do
-
-      column :n_1000,    :title => "1,000"
-      column :n_10000,   :title => "10,000"
-      # column :n_100000,  :title => "100,000"
-      # column :n_1000000, :title => "1,000,000"
-      
-      mt = MongoTest.new
-      report "mongodb" do
-        n_1000 {
-          mt.purge
-          mt.inserts(1000)
-        }
-        n_10000 {
-          mt.purge
-          mt.inserts(10000)
-        }
-        # n_100000 {
-        #   mt.purge
-        #   mt.inserts(100000)
-        # }
-        # n_1000000 {
-        #   mt.purge
-        #   mt.inserts(1000000)
-        # }
+namespace :db do
+  desc "Prepare test data"
+  task :prepare do
+    SETTINGS["number_of_accounts"].times do |account_id|
+      account = Account.fake(:_id => account_id)
+      p account_id
+      SETTINGS["products_per_account"].times do |product_id|
+        product = Product.fake(:account_id => account_id)
       end
     end
   end
+
+  desc "Clear database"
+  task :clear do
+    connection = MongoRecord::Base.connection
+    connection.collection('products').remove()
+    connection.collection('accounts').remove()
+  end
+
+  desc "Clear & prepare database"
+  task :clear_and_prepare => ["clear", "prepare"]
+
 end
-    
+
+task :default => ["db:clear_and_prepare"]
+
