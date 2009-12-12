@@ -42,8 +42,27 @@ namespace :benchmark do
     end
   end
 
+  desc "Update ceny"
+  task :products_update do
+    product_ids = Product.all.map {|p| p._id}
+    RBench.run(1) do
+      format :width => 80
+      column :times
+      column :one, :title => "[s]"
+      [1, 10, 100, 1_000].each do |times|
+        report "Update produktów", times do
+          one do
+            product = Product.find(product_ids.rand)
+            product.price = rand(10000)/100.0
+            product.save
+          end
+        end
+      end
+    end
+  end
+  
   desc "Wszystkie benchamrki"
-  task :all => [:account_products]
+  task :all => [:account_products, :products_update]
 end
 
 task :default => ["benchmark:all"]

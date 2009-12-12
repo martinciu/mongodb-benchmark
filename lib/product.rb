@@ -1,6 +1,6 @@
 class Product < MongoRecord::Base
     collection_name :products
-    fields :name, :price, :description, :active, :stock_level, :short_description, :account_id, :parent_ids
+    fields :name, :price, :description, :active, :stock_level, :short_description, :account_id, :parent_ids, :_id
     attr_accessor :parents
     
     index :account_id
