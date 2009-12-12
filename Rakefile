@@ -25,18 +25,50 @@ namespace :db do
 end
 
 namespace :benchmark do
+  
+  desc "Wyszkiwanie"
+  task :products_find do
+    number_of_products = Product.count - 1
+    RBench.run(1) do
+      format :width => 80
+      column :times
+      column :one, :title => "[s]"
+      [1, 10, 100, 1_000].each do |times|
+        report "Wyszukiwanie produktow", times do
+          one do
+            begin
+              Product.find(rand(number_of_products)+1)
+            rescue
+            end
+          end
+        end
+      end
+    end
+  end
+  
   desc "Lista produktow konta"
   task :account_products do
     RBench.run(1) do
       format :width => 80
       column :times
-      column :one, :title => "Bez rodziców"
-      column :two, :title => "Z rodzicami"
-      column :diff, :title => "#2/#1", :compare => [:two, :one]
+      column :one, :title => "[s]"
       [1, 10, 100, 1_000].each do |times|
         report "Lista produktow konta", times do
           one { Product.find_by_account_id(rand(SETTINGS["number_of_accounts"]))}
-          two { Product.find_by_account_id_with_parents(rand(SETTINGS["number_of_accounts"]))}
+        end
+      end
+    end
+  end
+  
+  desc "Lista produktow konta z rodzicami"
+  task :account_products_with_parents do
+    RBench.run(1) do
+      format :width => 80
+      column :times
+      column :one, :title => "[s]"
+      [1, 10, 100, 1_000].each do |times|
+        report "Lista produktow konta z rodzicami", times do
+          one { Product.find_by_account_id_with_parents(rand(SETTINGS["number_of_accounts"]))}
         end
       end
     end
@@ -44,17 +76,60 @@ namespace :benchmark do
 
   desc "Update ceny"
   task :products_update do
-    product_ids = Product.all.map {|p| p._id}
+    number_of_products = Product.count - 1
     RBench.run(1) do
       format :width => 80
       column :times
       column :one, :title => "[s]"
       [1, 10, 100, 1_000].each do |times|
-        report "Update produktów", times do
+        report "Update produktow", times do
           one do
-            product = Product.find(product_ids.rand)
-            product.price = rand(10000)/100.0
-            product.save
+            begin
+              product = Product.find(rand(number_of_products)+1)
+              product.price = rand(10000)/100.0
+              product.save
+            rescue
+            end
+          end
+        end
+      end
+    end
+  end
+  
+  desc "Usuwanie"
+  task :products_delete do
+    number_of_products = Product.count - 1
+    RBench.run(1) do
+      format :width => 80
+      column :times
+      column :one, :title => "[s]"
+      [1, 10, 100, 1_000].each do |times|
+        report "Usuwanie produktow", times do
+          one do
+            begin
+              Product.find(rand(number_of_products)+1).destroy
+            rescue
+            end
+          end
+        end
+      end
+    end
+  end
+  
+  desc "Usuniecie konta"
+  task :accounts_delete do
+    number_of_accounts = Account.count - 1
+    RBench.run(1) do
+      format :width => 80
+      column :times
+      column :one, :title => "[s]"
+      [1, 10, 100, 1_000].each do |times|
+        report "Usuwanie kont", times do
+          one do
+            begin
+              Account.find(rand(number_of_accounts)+1).destroy
+            rescue
+            end
           end
         end
       end
@@ -62,7 +137,8 @@ namespace :benchmark do
   end
   
   desc "Wszystkie benchamrki"
-  task :all => [:account_products, :products_update]
+  task :all => [:products_find, :account_products, :account_products_with_parents, :products_update, :products_delete, :accounts_delete]
+
 end
 
 task :default => ["benchmark:all"]

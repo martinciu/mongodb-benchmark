@@ -1,14 +1,17 @@
 small:
   number_of_accounts: 100
-  products_per_account: 3
-  inheritance_ratio: 0.25
-medium:
-  number_of_accounts: 1000
   products_per_account: 30
   inheritance_ratio: 0.25
-large:
-  number_of_accounts: 10000
-  products_per_account: 300
+  database_suffix: small
+medium:
+  number_of_accounts: 1000
+  products_per_account: 100
   inheritance_ratio: 0.25
+  database_suffix: medium
+large:
+  number_of_accounts: 5000
+  products_per_account: 200
+  inheritance_ratio: 0.25
+  database_suffix: large
   
   

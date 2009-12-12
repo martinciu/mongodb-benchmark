@@ -5,8 +5,11 @@ class Product < MongoRecord::Base
     
     index :account_id
     
+    @@id_counter = 1
+    
     def self.fake(attributes = {})
       product = Product.create({
+        :_id               => @@id_counter,
         :name              => Faker::Lorem.words(5).join(" "), 
         :price             => rand(10000)/100.0,
         :description       => Faker::Lorem.paragraphs(5).join(" "),
@@ -16,6 +19,7 @@ class Product < MongoRecord::Base
         :account_id        => rand(SETTINGS["number_of_accounts"]),
         :parent_ids        => []
       }.merge(attributes))
+      @@id_counter += 1
       while rand < SETTINGS["inheritance_ratio"]
         Product.fake(:parent_ids => product.parent_ids + [product._id])
       end
