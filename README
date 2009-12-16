@@ -2,4 +2,70 @@
 
 Benchamrking mongodb
 
+= Wyniki
+
+medium:
+  number_of_accounts: 1000
+  products_per_account: 300
+  inheritance_ratio: 0.25
+  
+* stworzenie bazy:
+real	69m22.796s
+user	66m2.687s
+sys	0m33.692s
+
+* produktow
+451788
+
+* na dysku:
+-rw-------  1 mac  admin    64M 16 gru 09:38 /data/db/mongodb-benchmark-medium.0
+-rw-------  1 mac  admin   128M 16 gru 09:38 /data/db/mongodb-benchmark-medium.1
+-rw-------  1 mac  admin   256M 16 gru 11:00 /data/db/mongodb-benchmark-medium.2
+-rw-------  1 mac  admin   512M 16 gru 10:56 /data/db/mongodb-benchmark-medium.3
+-rw-------  1 mac  admin   1,0G 16 gru 10:33 /data/db/mongodb-benchmark-medium.4
+-rw-------  1 mac  admin    16M 16 gru 09:38 /data/db/mongodb-benchmark-medium.ns
+
+* dump
+-rw-r--r--  1 mac  staff    95K 16 gru 11:20 accounts.bson
+-rw-r--r--  1 mac  staff   507M 16 gru 11:20 products.bson
+-rw-r--r--  1 mac  staff   283B 16 gru 11:20 system.indexes.bson
+
+                                                                     |     [s] |
+--------------------------------------------------------------------------------
+Wyszukiwanie produktow                                            x1 |   0.001 |
+Wyszukiwanie produktow                                           x10 |   0.006 |
+Wyszukiwanie produktow                                          x100 |   0.100 |
+Wyszukiwanie produktow                                         x1000 |   0.910 |
+                                                                     |     [s] |
+--------------------------------------------------------------------------------
+Lista produktow konta                                             x1 |   0.002 |
+Lista produktow konta                                            x10 |   0.026 |
+Lista produktow konta                                           x100 |   0.298 |
+Lista produktow konta                                          x1000 |   2.836 |
+                                                                     |     [s] |
+--------------------------------------------------------------------------------
+Lista produktow konta z rodzicami                                 x1 |   0.283 |
+Lista produktow konta z rodzicami                                x10 |   2.503 |
+Lista produktow konta z rodzicami                               x100 |  21.841 |
+Lista produktow konta z rodzicami                              x1000 | 182.637 |
+                                                                     |     [s] |
+--------------------------------------------------------------------------------
+Update produktow                                                  x1 |   0.002 |
+Update produktow                                                 x10 |   0.097 |
+Update produktow                                                x100 |   0.235 |
+Update produktow                                               x1000 |   2.266 |
+                                                                     |     [s] |
+--------------------------------------------------------------------------------
+Usuwanie produktow                                                x1 |   0.001 |
+Usuwanie produktow                                               x10 |   0.031 |
+Usuwanie produktow                                              x100 |   0.123 |
+Usuwanie produktow                                             x1000 |   0.863 |
+                                                                     |     [s] |
+--------------------------------------------------------------------------------
+Usuwanie kont                                                     x1 |   0.188 |
+Usuwanie kont                                                    x10 |   1.979 |
+Usuwanie kont                                                   x100 |  18.704 |
+Usuwanie kont                                                  x1000 | 111.200 |
+
 === author: Marcin Ciunelis marcin.ciunelis@gmail.com
+
